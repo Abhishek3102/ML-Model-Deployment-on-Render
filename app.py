@@ -1,13 +1,25 @@
 from flask import Flask, request, render_template
 import pickle
 import difflib
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
 
-# Load the dataset and similarity matrix
+# Load the dataset
 model_path = 'movies_model.pkl'
 with open(model_path, 'rb') as file:
-    df, similarity = pickle.load(file)
+    df = pickle.load(file)
+
+# Recompute the similarity matrix
+selected_features = ["genres", "keywords", "tagline", "cast", "director"]
+for feature in selected_features:
+    df[feature] = df[feature].fillna("")
+combined_features = df["genres"] + " " + df["keywords"] + " " + df["tagline"] + " " + df["cast"] + " " + df["director"]
+vectorizer = TfidfVectorizer()
+feature_vectors = vectorizer.fit_transform(combined_features)
+similarity = cosine_similarity(feature_vectors)
 
 @app.route('/')
 def home():
@@ -23,14 +35,11 @@ def recommend():
         return render_template('index.html', recommended_movies=["No match found. Please try again."])
 
     close_match = find_close_match[0]
-    print(f"Close match found: {close_match}")
 
     try:
         movie_index = df[df.title == close_match].index[0]
     except IndexError:
         return render_template('index.html', recommended_movies=["Error finding movie index. Please try again."])
-
-    print(f"Movie index: {movie_index}")
 
     try:
         similarity_score = list(enumerate(similarity[movie_index]))
