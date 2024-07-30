@@ -42,18 +42,19 @@ The application is deployed on Render, a cloud platform for hosting web applicat
 ### Local Deployment
 
 1. Clone the repository:
-   git clone https://github.com/yourusername/movies-recommendation-system.git
+   git clone [https://github.com/yourusername/movies-recommendation-system.git
+](https://github.com/Abhishek3102/ML-Model-Deployment-on-Render.git)
 
-2. Navigate to the project directory:
+3. Navigate to the project directory:
    cd movies-recommendation-system
 
-3. Install the required packages:
+4. Install the required packages:
    pip install -r requirements.txt
 
-4. Run the Flask application:
+5. Run the Flask application:
    python app.py
 
-5. Open a web browser and go to http://127.0.0.1:5000/.
+6. Open a web browser and go to http://127.0.0.1:5000/.
    
 Render Deployment
 The application is already deployed on Render. You can access it using the following link: Movie Recommendation System on Render
