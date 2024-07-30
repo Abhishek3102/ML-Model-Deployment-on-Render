@@ -6,18 +6,25 @@
         body {
             font-family: Arial, sans-serif;
             margin: 50px;
+            background-color: #f2f2f2;
         }
         .form-container {
             max-width: 500px;
             margin: auto;
             padding: 20px;
+            background-color: #fff;
             border: 1px solid #ccc;
             border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
         }
         .form-container input {
             width: 100%;
             padding: 10px;
-            margin: 5px 0 20px 0;
+            margin: 10px 0;
             display: inline-block;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -27,12 +34,13 @@
             background-color: #4CAF50;
             color: white;
             border: none;
+            cursor: pointer;
         }
         .form-container input[type="submit"]:hover {
             background-color: #45a049;
         }
         .result {
-            font-size: 1.5em;
+            font-size: 1.2em;
             color: #4CAF50;
             text-align: center;
             margin-top: 20px;
@@ -42,26 +50,20 @@
 <body>
     <div class="form-container">
         <h2>Movie Recommendation System</h2>
-        <form action="/predict" method="post">
-            <label for="IQ">IQ:</label>
-            <input type="number" name="IQ" required>
-            
-            <label for="CGPA">CGPA:</label>
-            <input type="number" step="0.01" name="CGPA" required>
-            
-            <label for="10th_Marks">10th Marks:</label>
-            <input type="number" name="10th_Marks" required>
-            
-            <label for="12th_Marks">12th Marks:</label>
-            <input type="number" name="12th_Marks" required>
-            
-            <label for="Communication_Skills">Communication Skills:</label>
-            <input type="number" step="0.01" name="Communication_Skills" required>
-            
-            <input type="submit" value="Predict">
+        <form action="/recommend" method="post">
+            <label for="movie_name">Enter the name of your favourite movie:</label>
+            <input type="text" id="movie_name" name="movie_name" required>
+            <input type="submit" value="Recommend">
         </form>
-        {% if prediction_text %}
-        <div class="result">{{ prediction_text }}</div>
+        {% if recommended_movies %}
+        <div class="result">
+            <h3>Movies suggested:</h3>
+            <ul>
+                {% for movie in recommended_movies %}
+                <li>{{ movie }}</li>
+                {% endfor %}
+            </ul>
+        </div>
         {% endif %}
     </div>
 </body>
