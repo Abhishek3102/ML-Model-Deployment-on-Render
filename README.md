@@ -42,9 +42,8 @@ The application is deployed on Render, a cloud platform for hosting web applicat
 ### Local Deployment
 
 1. Clone the repository:
-   git clone [https://github.com/yourusername/movies-recommendation-system.git
-](https://github.com/Abhishek3102/ML-Model-Deployment-on-Render.git)
-
+   git clone https://github.com/Abhishek3102/ML-Model-Deployment-on-Render.git
+   
 3. Navigate to the project directory:
    cd movies-recommendation-system
 
