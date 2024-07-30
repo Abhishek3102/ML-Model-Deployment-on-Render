@@ -1,18 +1,13 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template
 import pickle
-import pandas as pd
 import difflib
-import numpy as np
 
 app = Flask(__name__)
 
-# Load the dataset
-df = pd.read_csv('movies.csv')
-
-# Load the trained model
+# Load the dataset and similarity matrix
 model_path = 'movies_model.pkl'
 with open(model_path, 'rb') as file:
-    similarity = pickle.load(file)
+    df, similarity = pickle.load(file)
 
 @app.route('/')
 def home():
@@ -28,16 +23,29 @@ def recommend():
         return render_template('index.html', recommended_movies=["No match found. Please try again."])
 
     close_match = find_close_match[0]
-    movie_index = df[df.title == close_match].index[0]
+    print(f"Close match found: {close_match}")
 
-    # Get similarity scores
-    similarity_score = list(enumerate(similarity[movie_index]))
+    try:
+        movie_index = df[df.title == close_match].index[0]
+    except IndexError:
+        return render_template('index.html', recommended_movies=["Error finding movie index. Please try again."])
+
+    print(f"Movie index: {movie_index}")
+
+    try:
+        similarity_score = list(enumerate(similarity[movie_index]))
+    except IndexError:
+        return render_template('index.html', recommended_movies=["Error accessing similarity scores. Please try again."])
+
     sorted_similarity_score = sorted(similarity_score, key=lambda x: x[1], reverse=True)
 
     recommended_movies = []
     for i, movie in enumerate(sorted_similarity_score[1:31]):  # Skip the first movie as it is the input movie itself
         index = movie[0]
-        title_from_index = df.loc[index, 'title']
+        try:
+            title_from_index = df.loc[index, 'title']
+        except KeyError:
+            continue
         recommended_movies.append(title_from_index)
 
     return render_template('index.html', recommended_movies=recommended_movies)
